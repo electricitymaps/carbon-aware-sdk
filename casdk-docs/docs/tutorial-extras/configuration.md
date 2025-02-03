@@ -10,15 +10,12 @@
       - [Proxy](#proxy)
       - [WattTime Caching BalancingAuthority](#watttime-caching-balancingauthority)
     - [Json Configuration](#json-configuration)
-    - [ElectricityMaps Configuration](#electricitymaps-configuration)
+    - [Electricity Maps Configuration](#electricitymaps-configuration)
       - [API Token Header](#api-token-header)
       - [API Token](#api-token)
       - [BaseUrl](#baseurl)
       - [Emission Factor Type](#emission-factor-type)
       - [Disable Estimations](#disable-estimations)
-    - [ElectricityMapsFree Configuration](#electricitymapsfree-configuration)
-      - [API Token](#api-token)
-      - [BaseUrl](#baseurl)
   - [Cache](#cache)
   - [CarbonAwareVars](#carbonawarevars)
     - [Tracing and Monitoring Configuration](#tracing-and-monitoring-configuration)
@@ -28,9 +25,8 @@
   - [LocationDataSourcesConfiguration](#locationdatasourcesconfiguration)
 - [Sample Configurations](#sample-configurations)
   - [Configuration for Emissions data Using WattTime](#configuration-for-emissions-data-using-watttime)
-  - [Configuration for Forecast data Using ElectricityMaps](#configuration-for-forecast-data-using-electricitymaps)
-  - [Configuration for Emissions data using ElectricityMaps and Forecast data using WattTime](#configuration-for-emissions-data-using-electricitymaps-and-forecast-data-using-watttime)
-  - [Configuration for Emissions data using ElectricityMapsFree and Forecast data using WattTime](#configuration-for-emissions-data-using-electricitymapsfree-and-forecast-data-using-watttime)
+  - [Configuration for Forecast data Using Electricity Maps](#configuration-for-forecast-data-using-electricitymaps)
+  - [Configuration for Emissions data using Electricity Maps and Forecast data using WattTime](#configuration-for-emissions-data-using-electricitymaps-and-forecast-data-using-watttime)
   - [Configuration For Emissions data Using JSON](#configuration-for-emissions-data-using-json)
   - [Configuration Using WattTime and Defined Location Source Files](#configuration-using-watttime-and-defined-location-source-files)
 
@@ -84,12 +80,12 @@ Logging__LogLevel__Default="Debug" dotnet run
 
 The SDK supports multiple data sources for getting carbon data. At this time,
 only a JSON file, [WattTime](https://www.watttime.org/) and
-[ElectricityMaps](https://www.electricitymaps.com/) are supported.
+[Electricity Maps](https://www.electricitymaps.com/) are supported.
 
 Each data source interface is configured with a specific data source
 implementation.
 
-If set to `WattTime` or `ElectricityMaps`, the configuration specific to that
+If set to `WattTime` or `Electricity Maps`, the configuration specific to that
 data provider must also be supplied.
 
 `JSON` will result in the data being loaded from the file specified in the
@@ -222,14 +218,12 @@ info: CarbonAware.DataSources.Json.JsonDataSource[0]
     Reading Json data from /app/data-sources/json/mycustomfile.json
 ```
 
-### ElectricityMaps Configuration
+### Electricity Maps Configuration
 
-If using the ElectricityMaps data source, ElectricityMaps configuration is
+If using the Electricity Maps data source, Electricity Maps configuration is
 required.
 
-**With an account token:**
-
-> **NOTE** The ElectricityMaps API does not currently support access to
+> **NOTE** The Electricity Maps API does not currently support access to
 > historical forecasts. This means that functionality such as the CLI
 > `emissions-forecasts` `--requested-at` flag and the API `/forecasts/batch` >
 > `requestedAt` input will respond with a `NotImplemented` error.
@@ -239,6 +233,11 @@ required.
 > historical forecast" effectively. Otherwise, use a data source that has
 > support for historical forecasts, such as [WattTime](#watttime-configuration).
 
+> The Electricity Maps free account also does not currently support access to
+> historical emissions data. It only supports getting the single latest
+> emissions data point for the given location. For historical emissions, 
+> a paid account is needed.
+
 ```json
 {
   "APITokenHeader": "auth-token",
@@ -247,30 +246,19 @@ required.
 }
 ```
 
-**With a free trial token:**
-
-```json
-{
-  "APITokenHeader": "X-BLOBR-KEY",
-  "APIToken": "<api-token>",
-  "baseUrl": "https://api-access.electricitymaps.com/<url-token>"
-}
-```
-
-> **Sign up for a free trial:** Select the free trial product from
-> [the ElectricityMaps catalog](https://api-portal.electricitymaps.com/). Note
+> **Create a free account:** Select the free tier from
+> [the Electricity Maps portal](https://portal.electricitymaps.com/auth/login?utm_source=carbon-aware-sdk). Note
 > that there are some
-> [restrictions](./selecting-a-data-source.md#restrictions-electricitymaps-free-trial-user)
-> on the free trial product.
+> [restrictions](./selecting-a-data-source.md#restrictions-electricity-maps-free-account)
+> on the free accounts.
 
 #### API Token Header
 
-The API Token Header for ElectricityMaps. If you have a paid account, the header
-is "auth-token". If you're using the free trial, the header is "X-BLOBR-KEY"
+The API Token Header for Electricity Maps is "auth-token".
 
 #### API Token
 
-The ElectricityMaps token you receive with your account or free trial.
+The Electricity Maps token you receive with your account.
 
 #### BaseUrl
 
@@ -295,44 +283,6 @@ every ElectricityMaps API request that accepts this parameter.
 See the
 [ElectricityMaps API Documentation](https://static.electricitymaps.com/api/docs/index.html#estimations)
 for more details.
-
-### ElectricityMapsFree Configuration
-
-If using the ElectricityMapsFree data source, ElectricityMapsFree configuration
-is required.
-
-**With an account token:**
-
-> **NOTE** The ElectricityMapsFree API does not currently support access to
-> historical forecasts. This means that functionality such as the CLI
-> `emissions-forecasts` > `--requested-at` flag and the API `/forecasts/batch` >
-> `requestedAt` input will respond with a `NotImplemented` error.
->
-> The ElectricityMapsFree API also does not currently support access to
-> historical emissions data. It only supports getting the single latest
-> emissions data point for the given location.
->
-> If either of these restrictions are an issue, a data source that has support
-> for historical forecasts, such as [WattTime](#watttime-configuration) or
-> historical emissions, such as
-> [ElectricityMaps](#electricitymaps-configuration) may be preferable.
-
-```json
-{
-  "token": "<api-token>",
-  "baseUrl": "https://api.co2signal.com/v1/"
-}
-```
-
-#### API Token
-
-The ElectricityMapsFree token you receive with your account.
-
-#### BaseUrl
-
-The url to use when connecting to ElectricityMapsFree. Defaults to
-"https://api.co2signal.com/v1/" but can be overridden in the config if needed
-(such as to enable integration testing scenarios).
 
 ## Cache
 
