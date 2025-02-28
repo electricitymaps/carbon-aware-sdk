@@ -66,7 +66,7 @@ internal class ElectricityMapsClient : IElectricityMapsClient
     }
 
     /// <inheritdoc/>
-    public async Task<ForecastedCarbonIntensityData> GetForecastedCarbonIntensityAsync(string zoneName, int horizonHours = 24)
+    public async Task<ForecastedCarbonIntensityData> GetForecastedCarbonIntensityAsync(string zoneName, int horizonHours)
     {
         _log.LogDebug("Requesting forecasted carbon intensity using zone name {zoneName}",
             zoneName);
@@ -81,7 +81,7 @@ internal class ElectricityMapsClient : IElectricityMapsClient
     }
 
     /// <inheritdoc/>
-    public async Task<ForecastedCarbonIntensityData> GetForecastedCarbonIntensityAsync(string latitude, string longitude, int horizonHours = 24)
+    public async Task<ForecastedCarbonIntensityData> GetForecastedCarbonIntensityAsync(string latitude, string longitude, int horizonHours)
     {
         _log.LogDebug("Requesting forecasted carbon intensity using latitude {latitude} longitude {longitude}",
             latitude, longitude);

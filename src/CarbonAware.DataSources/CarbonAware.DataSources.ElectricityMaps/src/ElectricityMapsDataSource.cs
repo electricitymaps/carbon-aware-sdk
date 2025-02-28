@@ -41,15 +41,15 @@ internal class ElectricityMapsDataSource : IForecastDataSource, IEmissionsDataSo
     }
 
     /// <inheritdoc />
-    public async Task<EmissionsForecast> GetCurrentCarbonIntensityForecastAsync(Location location)
+    public async Task<EmissionsForecast> GetCurrentCarbonIntensityForecastAsync(Location location, int horizonHours = 24)
     {
         ForecastedCarbonIntensityData forecast;
         var geolocation = await this._locationSource.ToGeopositionLocationAsync(location);
         if (geolocation.Latitude != null && geolocation.Longitude != null)
-            forecast = await this._electricityMapsClient.GetForecastedCarbonIntensityAsync (geolocation.LatitudeAsCultureInvariantString(), geolocation.LongitudeAsCultureInvariantString());
+            forecast = await this._electricityMapsClient.GetForecastedCarbonIntensityAsync (geolocation.LatitudeAsCultureInvariantString(), geolocation.LongitudeAsCultureInvariantString(), horizonHours);
         else
         {
-            forecast = await this._electricityMapsClient.GetForecastedCarbonIntensityAsync (geolocation.Name ?? "");
+            forecast = await this._electricityMapsClient.GetForecastedCarbonIntensityAsync (geolocation.Name ?? "", horizonHours);
         }
 
         return ToEmissionsForecast(location, forecast);
@@ -106,7 +106,7 @@ internal class ElectricityMapsDataSource : IForecastDataSource, IEmissionsDataSo
         {
             historyCarbonIntensity = await GetPastCarbonIntensityData(periodStartTime, periodEndTime, geolocation);
         }
-        
+
         return HistoryCarbonIntensityToEmissionsData(location, historyCarbonIntensity, periodStartTime, periodEndTime);
     }
 
