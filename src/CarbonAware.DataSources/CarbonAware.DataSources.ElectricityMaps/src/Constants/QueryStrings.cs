@@ -9,4 +9,5 @@ internal class QueryStrings
     public const string EndTime = "end";
     public const string DisableEstimations = "disableEstimations";
     public const string EmissionFactorType = "emissionFactorType";
+    public const string HorizonHours = "horizonHours";
 }
