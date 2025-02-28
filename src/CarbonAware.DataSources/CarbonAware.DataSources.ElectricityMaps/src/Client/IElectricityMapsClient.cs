@@ -10,21 +10,23 @@ internal interface IElectricityMapsClient
     public const string NamedClient = "ElectricityMapsClient";
 
     /// <summary>
-    /// Async method to get the most recent 24 hour forecasted emission data for a given latitude and longitude.
+    /// Async method to get the most recent forecasted emission data for a given latitude and longitude.
     /// </summary>
     /// <param name="latitude">Latitude for query</param>
     /// <param name="longitude">Longitude for query</param>
+    /// <param name="horizonHours">The number of hours into the future to get forecasted data for, default is 24 hours.</param>
     /// <returns>A <see cref="Task{ForecastedCarbonIntensityData}"/> which contains forecasted emissions data points.</returns>
     /// <exception cref="ElectricityMapsClientException">Can be thrown when errors occur connecting to ElectricityMaps client.  See the ElectricityMapsClientException class for documentation of expected status codes.</exception>
-    Task<ForecastedCarbonIntensityData> GetForecastedCarbonIntensityAsync (string latitude, string longitude);
+    Task<ForecastedCarbonIntensityData> GetForecastedCarbonIntensityAsync (string latitude, string longitude, int horizonHours);
 
     /// <summary>
-    /// Async method to get the most recent 24 hour forecasted emission data for a given zone name.
+    /// Async method to get the most recent forecasted emission data for a given zone name.
     /// </summary>
     /// <param name="zoneName">Zone name for query</param>
+    /// <param name="horizonHours">The number of hours into the future to get forecasted data for, default is 24 hours.</param>
     /// <returns>A <see cref="Task{ForecastedCarbonIntensityData}"/> which contains forecasted emissions data points.</returns>
     /// <exception cref="ElectricityMapsClientException">Can be thrown when errors occur connecting to ElectricityMaps client.  See the ElectricityMapsClientException class for documentation of expected status codes.</exception>
-    Task<ForecastedCarbonIntensityData> GetForecastedCarbonIntensityAsync (string zoneName);
+    Task<ForecastedCarbonIntensityData> GetForecastedCarbonIntensityAsync (string zoneName, int horizonHours);
 
     /// <summary>
     /// Async method to get the most recent 24 hour observed emission data for a given latitude and longitude.
@@ -58,5 +60,5 @@ internal interface IElectricityMapsClient
     /// <param name="zoneName">Zone name for query</param>
     /// <returns>A <see cref="Task{HistoryCarbonIntensityData}"/> which contains all emissions data points in the 24 hour period.</returns>
     /// <exception cref="ElectricityMapsClientException">Can be thrown when errors occur connecting to ElectricityMaps client.  See the ElectricityMapsClientException class for documentation of expected status codes.</exception>
-    Task<PastRangeData> GetPastRangeDataAsync(string zone, DateTimeOffset startTime, DateTimeOffset endTime);  
+    Task<PastRangeData> GetPastRangeDataAsync(string zone, DateTimeOffset startTime, DateTimeOffset endTime);
 }

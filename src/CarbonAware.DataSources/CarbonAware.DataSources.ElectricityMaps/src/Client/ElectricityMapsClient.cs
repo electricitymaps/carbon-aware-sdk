@@ -66,7 +66,7 @@ internal class ElectricityMapsClient : IElectricityMapsClient
     }
 
     /// <inheritdoc/>
-    public async Task<ForecastedCarbonIntensityData> GetForecastedCarbonIntensityAsync(string zoneName)
+    public async Task<ForecastedCarbonIntensityData> GetForecastedCarbonIntensityAsync(string zoneName, int horizonHours = 24)
     {
         _log.LogDebug("Requesting forecasted carbon intensity using zone name {zoneName}",
             zoneName);
@@ -74,13 +74,14 @@ internal class ElectricityMapsClient : IElectricityMapsClient
         var parameters = new Dictionary<string, string>()
         {
             { QueryStrings.ZoneName, zoneName },
+            { QueryStrings.HorizonHours, horizonHours.ToString() }
         };
 
         return await GetCurrentForecastAsync(parameters);
     }
 
     /// <inheritdoc/>
-    public async Task<ForecastedCarbonIntensityData> GetForecastedCarbonIntensityAsync(string latitude, string longitude)
+    public async Task<ForecastedCarbonIntensityData> GetForecastedCarbonIntensityAsync(string latitude, string longitude, int horizonHours = 24)
     {
         _log.LogDebug("Requesting forecasted carbon intensity using latitude {latitude} longitude {longitude}",
             latitude, longitude);
@@ -89,6 +90,7 @@ internal class ElectricityMapsClient : IElectricityMapsClient
         {
             { QueryStrings.Latitude, latitude },
             { QueryStrings.Longitude, longitude },
+            { QueryStrings.HorizonHours, horizonHours.ToString() }
         };
 
         return await GetCurrentForecastAsync(parameters);
